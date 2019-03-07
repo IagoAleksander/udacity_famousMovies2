@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".presentation.ui.activities.MainActivity">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/recyclerMovies"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <Button
+                android:id="@+id/bt_popular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/popular_movies"
+                app:layout_constraintEnd_toStartOf="@id/bt_top_rated"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/bt_top_rated"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/top_rated_movies"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/bt_popular"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/bt_upcoming"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/upcoming_movies"
+                app:layout_constraintEnd_toEndOf="@id/bt_popular"
+                app:layout_constraintStart_toStartOf="@id/bt_popular"
+                app:layout_constraintTop_toBottomOf="@+id/bt_popular" />
+
+            <Button
+                android:id="@+id/bt_favorites"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/favorited_movies"
+                app:layout_constraintEnd_toEndOf="@id/bt_top_rated"
+                app:layout_constraintStart_toStartOf="@id/bt_top_rated"
+                app:layout_constraintTop_toBottomOf="@id/bt_top_rated" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerMovies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</layout>
