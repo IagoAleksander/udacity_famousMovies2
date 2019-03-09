@@ -10,7 +10,8 @@ public class Constants {
     public static final int FAVORITED_MOVIES = 4;
 
     public static final String MOVIE_ID = "movie_id";
+    public static final String SORTING_ORDER = "sorting_order";
 
-//    24 Hours = 86,400,000 Milliseconds
+    //    24 Hours = 86,400,000 Milliseconds
     public static final long updateTime = 86400000;
 }

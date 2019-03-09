@@ -12,6 +12,7 @@
     <string name="favorited_movies">Favorited\nMovies</string>
 
     <string name="error_recovering_data">Error recovering data</string>
+    <string name="error_reproducing_video">The video cannot be reproduced</string>
 
     <string name="details">Movie Details</string>
     <string name="average_rating">"Average Rating: "</string>

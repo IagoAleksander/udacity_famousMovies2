@@ -169,7 +169,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             try {
                 MovieDetailsActivity.this.startActivity(appIntent);
             } catch (ActivityNotFoundException ex) {
-                MovieDetailsActivity.this.startActivity(webIntent);
+                if (webIntent.resolveActivity(getPackageManager()) != null)
+                    MovieDetailsActivity.this.startActivity(webIntent);
+                else
+                    Toast.makeText(MovieDetailsActivity.this, R.string.error_reproducing_video, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -180,8 +183,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             binding.ivTurnFavorite.setImageDrawable(getDrawable(R.drawable.ic_star));
             binding.tvTurnFavorite.setText(getString(R.string.unfavorite_movie));
             binding.llTurnFavorite.setOnClickListener(v -> unfavoriteMovie());
-        }
-        else {
+        } else {
             binding.llTurnFavorite.setOnClickListener(v -> favoriteMovie());
         }
     }
@@ -191,12 +193,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
             canClick = false;
             mDisposable.add(Completable.fromAction(() -> mDb.moviesDao().setFavorite(movie.getId()))
                     .subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
-                binding.ivTurnFavorite.setImageDrawable(getDrawable(R.drawable.ic_star));
-                canClick = true;
-                movie.setFavorite(true);
-                binding.tvTurnFavorite.setText(getString(R.string.unfavorite_movie));
-                binding.llTurnFavorite.setOnClickListener(v -> unfavoriteMovie());
-            }, throwable -> canClick = true));
+                        binding.ivTurnFavorite.setImageDrawable(getDrawable(R.drawable.ic_star));
+                        canClick = true;
+                        movie.setFavorite(true);
+                        binding.tvTurnFavorite.setText(getString(R.string.unfavorite_movie));
+                        binding.llTurnFavorite.setOnClickListener(v -> unfavoriteMovie());
+                    }, throwable -> canClick = true));
         }
     }
 
@@ -205,12 +207,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
             canClick = false;
             mDisposable.add(Completable.fromAction(() -> mDb.moviesDao().unfavorite(movie.getId()))
                     .subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
-                binding.ivTurnFavorite.setImageDrawable(getDrawable(R.drawable.ic_star_border));
-                canClick = true;
-                movie.setFavorite(false);
-                binding.tvTurnFavorite.setText(getString(R.string.turn_favorite));
-                binding.llTurnFavorite.setOnClickListener(v -> favoriteMovie());
-            }, throwable -> canClick = true));
+                        binding.ivTurnFavorite.setImageDrawable(getDrawable(R.drawable.ic_star_border));
+                        canClick = true;
+                        movie.setFavorite(false);
+                        binding.tvTurnFavorite.setText(getString(R.string.turn_favorite));
+                        binding.llTurnFavorite.setOnClickListener(v -> favoriteMovie());
+                    }, throwable -> canClick = true));
         }
     }
 

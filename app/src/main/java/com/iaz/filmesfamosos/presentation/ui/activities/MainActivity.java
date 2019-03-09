@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         mDb = AppDatabase.getInstance(this);
 
+        if (savedInstanceState != null)
+            selectedButton = savedInstanceState.getInt(Constants.SORTING_ORDER, 1);
+
         chooseButton(selectedButton);
 
         binding.btPopular.setOnClickListener(view -> chooseButton(Constants.POPULAR_MOVIES));
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
 
-                    if (response.body() != null)
+                    if (response.body() != null && selectedButton == Constants.POPULAR_MOVIES)
                         setAdapter(response.body().getResults());
 
                     Completable.fromAction(() -> mDb.moviesDao().insertMovieLocalList(response.body().getResults(), Constants.POPULAR_MOVIES)).subscribeOn(Schedulers.computation()).subscribe();
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
 
-                    if (response.body() != null)
+                    if (response.body() != null && selectedButton == Constants.TOP_RATED_MOVIES)
                         setAdapter(response.body().getResults());
 
                     Completable.fromAction(() -> mDb.moviesDao().insertMovieLocalList(response.body().getResults(), Constants.TOP_RATED_MOVIES)).subscribeOn(Schedulers.computation()).subscribe();
@@ -116,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
 
-                    if (response.body() != null)
+                    if (response.body() != null && selectedButton == Constants.UPCOMING_MOVIES)
                         setAdapter(response.body().getResults());
 
                     Completable.fromAction(() -> mDb.moviesDao().insertMovieLocalList(response.body().getResults(), Constants.UPCOMING_MOVIES)).subscribeOn(Schedulers.computation()).subscribe();
@@ -197,9 +200,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        chooseButton(selectedButton);
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(Constants.SORTING_ORDER, selectedButton);
     }
 
 }
