@@ -2,10 +2,12 @@ package com.iaz.filmesfamosos.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 @Entity(tableName = "movie")
-public class MovieModel {
+public class MovieModel implements Parcelable {
     private String vote_average;
 
     private String backdrop_path;
@@ -190,4 +192,65 @@ public class MovieModel {
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.vote_average);
+        dest.writeString(this.backdrop_path);
+        dest.writeString(this.adult);
+        dest.writeString(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.overview);
+        dest.writeString(this.original_language);
+        dest.writeString(this.release_date);
+        dest.writeString(this.original_title);
+        dest.writeString(this.vote_count);
+        dest.writeString(this.poster_path);
+        dest.writeByte(this.video ? (byte) 1 : (byte) 0);
+        dest.writeString(this.videoPath);
+        dest.writeString(this.popularity);
+        dest.writeByte(this.isPopular ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isTopRated ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isUpcoming ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
+
+    }
+
+    protected MovieModel (Parcel in) {
+        this.vote_average = in.readString();
+        this.backdrop_path = in.readString();
+        this.adult = in.readString();
+        this.id = in.readString();
+        this.title = in.readString();
+        this.overview = in.readString();
+        this.original_language = in.readString();
+        this.release_date = in.readString();
+        this.original_title = in.readString();
+        this.vote_count = in.readString();
+        this.poster_path = in.readString();
+        this.video = in.readByte() != 0;
+        this.videoPath = in.readString();
+        this.popularity = in.readString();
+        this.isPopular = in.readByte() != 0;
+        this.isTopRated = in.readByte() != 0;
+        this.isUpcoming = in.readByte() != 0;
+        this.isFavorite = in.readByte() != 0;
+    }
+
+    public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
+        @Override
+        public MovieModel createFromParcel(Parcel source) {
+            return new MovieModel(source);
+        }
+
+        @Override
+        public MovieModel[] newArray(int size) {
+            return new MovieModel[size];
+        }
+    };
 }

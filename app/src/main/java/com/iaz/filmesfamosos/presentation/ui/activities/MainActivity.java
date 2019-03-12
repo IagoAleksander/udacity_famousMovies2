@@ -3,6 +3,7 @@ package com.iaz.filmesfamosos.presentation.ui.activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,25 +28,31 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+import static com.iaz.filmesfamosos.Constants.LIST_STATE;
+
 public class MainActivity extends AppCompatActivity {
 
     private MoviesAdapter moviesAdapter;
     private ActivityMainBinding binding;
     private AppDatabase mDb;
     private int selectedButton = Constants.POPULAR_MOVIES;
+    private Parcelable listPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
+        }
 
         mDb = AppDatabase.getInstance(this);
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             selectedButton = savedInstanceState.getInt(Constants.SORTING_ORDER, 1);
+            listPosition = savedInstanceState.getParcelable(LIST_STATE);
+        }
 
         chooseButton(selectedButton);
 
@@ -162,6 +169,9 @@ public class MainActivity extends AppCompatActivity {
         Utilities.BottomOffsetDecoration bottomOffsetDecoration = new Utilities.BottomOffsetDecoration(8);
         binding.recyclerMovies.addItemDecoration(bottomOffsetDecoration);
         binding.recyclerMovies.setAdapter(moviesAdapter);
+
+        if (listPosition != null)
+            binding.recyclerMovies.getLayoutManager().onRestoreInstanceState(listPosition);
     }
 
     private void chooseButton(int number) {
@@ -204,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         outState.putInt(Constants.SORTING_ORDER, selectedButton);
+        outState.putParcelable(LIST_STATE, binding.recyclerMovies.getLayoutManager().onSaveInstanceState());
     }
 
 }

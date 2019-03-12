@@ -38,6 +38,9 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+import static com.iaz.filmesfamosos.Constants.LIST_STATE;
+import static com.iaz.filmesfamosos.Constants.MOVIE_BUNDLE;
+
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private MovieModel movie;
@@ -60,7 +63,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.details);
         }
 
-        if (getIntent().getExtras() != null) {
+        if (savedInstanceState != null) {
+            movie = savedInstanceState.getParcelable(Constants.MOVIE_BUNDLE);
+            if (movie != null)
+                displayMovieInfo();
+        } else if (getIntent().getExtras() != null) {
             String movieId = getIntent().getExtras().getString(Constants.MOVIE_ID);
 
             MovieDetailsViewModelFactory factory = new MovieDetailsViewModelFactory(mDb, movieId);
@@ -72,19 +79,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     viewModel.getMovieDetails().removeObserver(this);
 
                     if (movie != null) {
-
-                        if (movie.getVideoPath() != null && !movie.getVideoPath().isEmpty())
-                            setVideoPlayer(movie.getVideoPath());
-                        else
-                            getVideo(movie.getId());
-
-                        getReviews(movie.getId());
-                        binding.setMovie(movie);
-
-                        if (movie.getPoster_path() != null && !movie.getPoster_path().isEmpty())
-                            Picasso.with(MovieDetailsActivity.this).load(Constants.POSTER_IMAGE_BASE_URL + movie.getPoster_path()).into(binding.ivPoster);
-
-                        setFavoriteButton();
+                        displayMovieInfo();
                     }
                 }
             });
@@ -216,9 +211,30 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void displayMovieInfo() {
+        if (movie.getVideoPath() != null && !movie.getVideoPath().isEmpty())
+            setVideoPlayer(movie.getVideoPath());
+        else
+            getVideo(movie.getId());
+
+        getReviews(movie.getId());
+        binding.setMovie(movie);
+
+        if (movie.getPoster_path() != null && !movie.getPoster_path().isEmpty())
+            Picasso.with(MovieDetailsActivity.this).load(Constants.POSTER_IMAGE_BASE_URL + movie.getPoster_path()).into(binding.ivPoster);
+
+        setFavoriteButton();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mDisposable.clear();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MOVIE_BUNDLE, movie);
     }
 }
